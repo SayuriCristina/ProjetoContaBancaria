@@ -55,7 +55,7 @@ public class Menu {
 				System.out.println(Cores.TEXT_WHITE_BOLD + "\nBanco do Brazil com Z - O seu futuro começa aqui!");
 				sobre();
 				leia.close();
-				System.exit(0); // Fecha o programa
+				System.exit(0); // Fecha o programa.
 			}
 			
 			switch (opcao) {
