@@ -1,7 +1,10 @@
 package conta;
 
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import conta.util.Cores;
+import conta.controller.ContaController;
 import conta.model.ContaCorrente;
 import conta.model.ContaPoupanca;
 
@@ -9,90 +12,154 @@ public class Menu {
 
 	public static void main(String[] args) {
 		
-		ContaCorrente cc1 = new ContaCorrente(2, 123, 1, "Mariana", 15000.0f, 1000.0f);
-		cc1.visualizar();
-		cc1.sacar(12000.0f);
-		cc1.visualizar();
-		cc1.depositar(5000.0f);
-		cc1.visualizar();
-		
-		ContaPoupanca cp1 = new ContaPoupanca(3, 123, 2, "Victor", 100000.0f, 15);
-		cp1.visualizar();
-		cp1.sacar(1000.0f);
-		cp1.visualizar();
-		cp1.depositar(5000.0f);
-		cp1.visualizar();
+		ContaController contas = new ContaController();
 		
 		Scanner leia = new Scanner(System.in);
 		
-		int opcao;
+		int opcao, numero, agencia, tipo, aniversario;
+		String titular;
+		float saldo, limite;
+		
+		System.out.println("\nCriar contas\n");
+		ContaCorrente cc1 = new ContaCorrente(contas.gerarNumero(), 123, 1, "João da Silva", 1000f, 100.0f);
+		contas.cadastrar(cc1);
+		
+		ContaCorrente cc2 = new ContaCorrente(contas.gerarNumero(), 124, 1, "Maria da Silva", 2000f, 100.0f);
+		contas.cadastrar(cc2);
+		
+		ContaPoupanca cp1 = new ContaPoupanca(contas.gerarNumero(), 125, 2, "Mariana dos Santos", 4000f, 12);
+		contas.cadastrar(cp1);
+		
+		ContaPoupanca cp2 = new ContaPoupanca(contas.gerarNumero(), 125, 2, "Mariana dos Santos", 8000f, 15);
+		contas.cadastrar(cp2);
+		
+		contas.listarTodas();
 		
 		while (true) {
 			
-			System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND);
+			System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND); // Deixa texto amarelo em fundo preto
 			
-			System.out.println("╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ · · ✫ · · ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮ ");
-			System.out.println("           ❝ Banco do Brasil com Z ❞             ");
-			System.out.println("╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ · · ✫ · · ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯ ");
-			System.out.println("                                                ");
-			System.out.println("          1 ➤ Criar conta                       ");
-			System.out.println("          2 ➤ Listar todas as contas            ");
-			System.out.println("          3 ➤ Buscar conta por número           ");
-			System.out.println("          4 ➤ Atualizar dados da conta          ");
-			System.out.println("          5 ➤ Apagar conta                      ");
-			System.out.println("          6 ➤ Sacar                             ");
-			System.out.println("          7 ➤ Depositar                         ");
-			System.out.println("          8 ➤ Transferir valores entre contas   ");
-			System.out.println("          9 ➤ Sair                              ");
-			System.out.println("                                                ");
-			System.out.println("— — — — — — — — — — — — — — — — — — — — — — — — ");
-			System.out.println("Entre com a opção desejada:                     ");
-			System.out.println("                                                " + Cores.TEXT_RESET);
+			System.out.println("╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ · · ✫ · · ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮");
+			System.out.println("           ❝ Banco do Brasil com Z ❞            ");
+			System.out.println("╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ · · ✫ · · ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯");
+			System.out.println("                                               ");
+			System.out.println("          1 ➤ Criar conta                      ");
+			System.out.println("          2 ➤ Listar todas as contas           ");
+			System.out.println("          3 ➤ Buscar conta por número          ");
+			System.out.println("          4 ➤ Atualizar dados da conta         ");
+			System.out.println("          5 ➤ Apagar conta                     ");
+			System.out.println("          6 ➤ Sacar                            ");
+			System.out.println("          7 ➤ Depositar                        ");
+			System.out.println("          8 ➤ Transferir valores entre contas  ");
+			System.out.println("          9 ➤ Sair                             ");
+			System.out.println("                                               ");
+			System.out.println("— — — — — — — — — — — — — — — — — — — — — — — —");
+			System.out.println("Entre com a opção desejada:                    ");
+			System.out.println("                                               " + Cores.TEXT_RESET);
 			
-			opcao = leia.nextInt();
+			// Trata do erro de input inválido.
+			try {
+				opcao = leia.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("\nPor favor, digite um valor inteiro e válido, conforme o menu.");
+				leia.nextLine();
+				opcao = 0;
+			}
 			
+			
+			// Fecha o programa quando pressionado o número 9.
 			if (opcao == 9) {
 				System.out.println(Cores.TEXT_WHITE_BOLD + "\nBanco do Brazil com Z - O seu futuro começa aqui!");
 				sobre();
 				leia.close();
-				System.exit(0); // Fecha o programa.
+				System.exit(0); 
 			}
 			
+			
+			// Funcionalidades da conta
 			switch (opcao) {
 			case 1:
 				System.out.println(Cores.TEXT_WHITE + "Criar conta \n\n");
 				
+				System.out.println("Digite o número da agência: ");
+				agencia = leia.nextInt();
+				System.out.println("Digite o número do titular: ");
+				leia.skip("\\R?"); // Ignora a entrada que corresponde ao padrão especificado
+				titular = leia.nextLine();
+				
+				do {
+					System.out.println("Digite o tipo da conta (1 - Corrente ou 2 - Poupança): ");
+					tipo = leia.nextInt();
+				} while (tipo < 1 && tipo > 2);
+				
+				System.out.println("Digite o saldo da conta (R$): ");
+				saldo = leia.nextFloat();
+				
+				switch (tipo) {
+				case 1 -> {
+					System.out.println("Digite o limite de crédito (R$): ");
+					limite = leia.nextFloat();
+					contas.cadastrar(new ContaCorrente(contas.gerarNumero(), agencia, tipo, titular, saldo, limite));
+				}
+				
+				case 2 -> {
+					System.out.println("Digite o dia do aniversário da conta");
+					aniversario = leia.nextInt();
+					contas.cadastrar(new ContaPoupanca(contas.gerarNumero(), agencia, tipo, titular, saldo, aniversario));
+				}
+				}
+				
+				keyPress();
 				break;
+				
 			case 2: 
 				System.out.println(Cores.TEXT_WHITE + "Listar todas as contas\n\n");
 				
+				contas.listarTodas();
+				
+				keyPress();
 				break;
+				
 			case 3:
 				System.out.println(Cores.TEXT_WHITE + "Consultar dados da conta - por número\n\n");
 				
+				keyPress();
 				break;
+				
 			case 4: 
 				System.out.println(Cores.TEXT_WHITE + "Atualizar dados da conta\n\n");
 				
+				keyPress();
 				break;
+				
 			case 5:
 				System.out.println(Cores.TEXT_WHITE + "Apagar conta\n\n");
 				
+				keyPress();
 				break;
+				
 			case 6:
 				System.out.println(Cores.TEXT_WHITE + "Saque\n\n");
 				
+				keyPress();
 				break;
+				
 			case 7:
 				System.out.println(Cores.TEXT_WHITE + "Deposito\n\n");
 				
+				keyPress();
 				break;
+				
 			case 8:
 				System.out.println(Cores.TEXT_WHITE + "Transferência entre contas\n\n");
 				
+				keyPress();
 				break;
+				
 			default:
 				System.out.println(Cores.TEXT_RED_BOLD + "\nOpção inválida!\n");
+				
+				keyPress();
 				break;
 			
 			}
@@ -100,8 +167,25 @@ public class Menu {
 		}
 
 	}
-
-	public static void sobre() {
+	
+	
+	// Trata do erro ao pressionar tecla diferente de Enter.
+	public static void keyPress() {
+		
+		try {
+			
+			System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para continuar");
+			System.in.read();
+			
+		} catch (IOException e){
+			
+			System.out.println("Você pressionou uma tecla diferente de Enter.");
+			
+		}
+	}
+	
+	
+		public static void sobre() {
 		System.out.println("✦ •····················• ✦ •····················• ✦");
 		System.out.println("   ❝ Projeto desenvolvido por Sayuri Cristina ❞    ");
 		System.out.println("      ˗ˏˋ sayuri.cristinass@gmail.com ˎˊ˗          ");
